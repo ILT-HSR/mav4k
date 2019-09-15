@@ -1,0 +1,4 @@
+headers = libxml/xmlreader.h
+
+compilerOpts.linux = -I/usr/include/libxml2 -I/usr/include
+linkerOpts.linux = -L/usr/lib -lxml2

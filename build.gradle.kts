@@ -11,7 +11,11 @@ val kotlinxIoVersion = "0.1.14"
 
 kotlin {
     jvm()
-    linuxX64()
+
+    linuxX64() {
+        val main by compilations.getting
+        val interop by main.cinterops.creating
+    }
 
     sourceSets {
         val commonMain by getting {
