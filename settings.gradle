@@ -1,0 +1,4 @@
+rootProject.name = 'mav4k'
+
+
+enableFeaturePreview('GRADLE_METADATA')

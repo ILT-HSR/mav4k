@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="mav4k-jvm">
+    <output-path>$PROJECT_DIR$/build/libs</output-path>
+    <root id="archive" name="mav4k-jvm.jar">
+      <element id="module-output" name="mav4k.jvmMain" />
+    </root>
+  </artifact>
+</component>
