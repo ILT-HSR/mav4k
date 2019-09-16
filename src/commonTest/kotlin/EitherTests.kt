@@ -44,4 +44,20 @@ class EitherTests {
         assertTrue(result is Right<String>)
         assertEquals("Grace Hopper", result.value)
     }
+
+    @Test
+    fun `Imbue leaves object unmodified if its argument is a 'Left'`() {
+        val either: Either<Int, Char> = fail(42)
+        val result = imbue("Barbara Liskov", either)
+        assertTrue(result is Left<Int>)
+        assertEquals(either, result)
+    }
+
+    @Test
+    fun `Imbue replaces value if its argument is a 'Right'`() {
+        val either: Either<Boolean, Float> = pure(42.0f)
+        val result = imbue(false, either)
+        assertTrue(result is Right<Boolean>)
+        assertEquals(false, result.value)
+    }
 }

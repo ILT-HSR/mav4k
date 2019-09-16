@@ -31,3 +31,11 @@ fun <LeftT, RightT, ResT> fmap(either: Either<LeftT, RightT>, fn: (RightT) -> Re
     is Left -> either
     is Right -> Right(fn(either.value))
 }
+
+/**
+ * Imbue an `Either` with a new value if it hasn't failed
+ */
+fun <LeftT, RightT, ImbueT> imbue(new: ImbueT, either: Either<LeftT, RightT>) = when(either) {
+    is Left -> either
+    is Right -> Right(new)
+}
