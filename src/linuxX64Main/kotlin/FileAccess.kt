@@ -1,13 +1,39 @@
 package ch.hsr.ilt.mav4k
 
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.convert
-import kotlinx.cinterop.toKString
-import kotlinx.cinterop.usePinned
-import platform.posix.ERANGE
-import platform.posix.errno
-import platform.posix.getcwd
-import platform.posix.set_posix_errno
+import kotlinx.cinterop.*
+import platform.posix.*
+
+actual val workingDirectory: Path
+    get() {
+        var bufferSize = 512
+        var cwd: Either<Int, String> = fail(ERANGE)
+        while (cwd is Left<Int> && cwd.value == ERANGE) {
+            cwd = getcwd(bufferSize)
+            bufferSize *= 2
+        }
+        return Path(
+            when (cwd) {
+                is Left<Int> -> ""
+                is Right<String> -> cwd.value
+            }
+        )
+    }
+
+actual class NativePath actual constructor(actual val raw: String) {
+
+    actual companion object {
+        actual val SEPARATOR = "/"
+    }
+
+    actual fun exists() = memScoped {
+        val info = alloc<stat>()
+        val result = stat(raw, info.ptr)
+        result == 0
+    }
+
+    actual fun join(other: NativePath) = NativePath("$raw$SEPARATOR${other.raw}")
+
+}
 
 private fun getcwd(bufferSize: Int) =
     ByteArray(bufferSize).usePinned {
@@ -16,19 +42,5 @@ private fun getcwd(bufferSize: Int) =
         when {
             errno != 0 -> fail(errno)
             else -> pure(it.get().toKString())
-        }
-    }
-
-actual val workingDirectory: String
-    get() {
-        var bufferSize = 512
-        var cwd: Either<Int, String> = fail(ERANGE)
-        while (cwd is Left<Int> && cwd.value == ERANGE) {
-            cwd = getcwd(bufferSize)
-            bufferSize *= 2
-        }
-        return when (cwd) {
-            is Left<Int> -> ""
-            is Right<String> -> cwd.value
         }
     }
