@@ -4,7 +4,6 @@ sealed class Either<out LeftT, out RightT>
 
 class Left<out LeftT>(val value: LeftT) : Either<LeftT, Nothing>()
 
-@Suppress("EqualsOrHashCode")
 class Right<out RightT>(val value: RightT) : Either<Nothing, RightT>()
 
 /**
